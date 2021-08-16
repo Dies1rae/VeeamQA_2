@@ -5,7 +5,7 @@
 #include <iomanip>
 
 using namespace std;
-using namespace Hshchk;
+using namespace hshChk;
 
 int main(int argc, char* argv[]) {
     if (argc == 3) {

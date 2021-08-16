@@ -10,7 +10,7 @@
 #include <map>
 #include <iostream>
 
-namespace Hshchk {
+namespace hshChk {
 	enum class HashType {
 		MD5,
 		SHA1,
@@ -39,7 +39,7 @@ namespace Hshchk {
 
 		HashChk(const std::string& infile, const std::string& outdir) : in_file_(infile), out_dir_(outdir) {}
 
-		CheckState calculateFileHsh(const std::string& src, const std::string& srchsh, const HashType& type) const;
+		CheckState calculateFilehash(const std::string& src, const std::string& srchash, const HashType& type) const;
 
 		void printResults() const;
 
@@ -48,7 +48,7 @@ namespace Hshchk {
 		void calculateDstFiles();
 
 	private:
-		void checkDstPAth();
+		void checkDstPath();
 
 		std::vector<std::string> stringTokinizd(const std::string& value) const;
 
@@ -58,4 +58,4 @@ namespace Hshchk {
 		std::vector<std::pair<std::string, CheckState>> calculated_status;
 	};
 
-} //namespace Hshchk
+} //namespace hashchk

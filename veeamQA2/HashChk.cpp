@@ -1,8 +1,8 @@
 #include "HashChk.h"
 
-namespace Hshchk {
-	CheckState HashChk::calculateFileHsh(const std::string& src, const std::string& srchsh, const HashType& type) const {
-		std::string hsh;
+namespace hshChk {
+	CheckState HashChk::calculateFilehash(const std::string& src, const std::string& srchash, const HashType& type) const {
+		std::string hash;
 		std::ifstream src_(src, std::ios::binary);
 		if (!src_.good()) {
 			src_.close();
@@ -22,8 +22,8 @@ namespace Hshchk {
 			src_.close();
 			MD5_Final(md5digest, &md5handler);
 			for (size_t ptr = 0; ptr < MD5_DIGEST_LENGTH; ptr++) {
-				hsh += "0123456789abcdef"[md5digest[ptr] / 16];
-				hsh += "0123456789abcdef"[md5digest[ptr] % 16];
+				hash += "0123456789abcdef"[md5digest[ptr] / 16];
+				hash += "0123456789abcdef"[md5digest[ptr] % 16];
 			};
 		} else if (type == HashType::SHA1) {
 			src_.read(buffer,Length);
@@ -33,8 +33,8 @@ namespace Hshchk {
 			SHA1_Update(&sha1handler, buffer, Length);
 			SHA1_Final(sha1digest, &sha1handler);
 			for (size_t ptr = 0; ptr < SHA_DIGEST_LENGTH; ptr++) {
-				hsh += "0123456789abcdef"[sha1digest[ptr] / 16];
-				hsh += "0123456789abcdef"[sha1digest[ptr] % 16];
+				hash += "0123456789abcdef"[sha1digest[ptr] / 16];
+				hash += "0123456789abcdef"[sha1digest[ptr] % 16];
 			}
 		} else if (type == HashType::SHA256) {
 			SHA256_CTX sha256handler;
@@ -43,11 +43,11 @@ namespace Hshchk {
 			SHA256_Update(&sha256handler, buffer, Length);
 			SHA256_Final(sha256digest, &sha256handler);
 			for (size_t ptr = 0; ptr < SHA256_DIGEST_LENGTH; ptr++) {
-				hsh += "0123456789abcdef"[sha256digest[ptr] / 16];
-				hsh += "0123456789abcdef"[sha256digest[ptr] % 16];
+				hash += "0123456789abcdef"[sha256digest[ptr] / 16];
+				hash += "0123456789abcdef"[sha256digest[ptr] % 16];
 			}
 		}
-		if (hsh == srchsh) {
+		if (hash == srchash) {
 			return CheckState::OK;
 		}
 		return CheckState::FAIL;
@@ -100,13 +100,13 @@ namespace Hshchk {
 	}
 
 	void HashChk::calculateDstFiles() {
-		this->checkDstPAth();
-		for (const auto& [file_hshtype, hsh] : this->parsed_status) {
-			this->calculated_status.push_back({file_hshtype.first, this->calculateFileHsh(this->out_dir_ + file_hshtype.first, hsh, file_hshtype.second)});
+		this->checkDstPath();
+		for (const auto& [file_hashtype, hash] : this->parsed_status) {
+			this->calculated_status.push_back({file_hashtype.first, this->calculateFilehash(this->out_dir_ + file_hashtype.first, hash, file_hashtype.second)});
 		}
 	}
 
-	void HashChk::checkDstPAth() {
+	void HashChk::checkDstPath() {
 	#ifdef __linux__
 		if (this->out_dir_[this->out_dir_.size() - 1] != '/') {
 			this->out_dir_ += '/';
